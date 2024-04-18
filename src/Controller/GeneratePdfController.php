@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use App\Form\Type\GeneratePdfForm;
+use App\Entity\Pdf;
+use App\Form\GeneratePdfForm;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class GeneratePdfController extends AbstractController
 {
     #[Route('/generate/pdf', name: 'generate_pdf')]
-    public function generatePdf(Request $request): Response
+    public function generatePdf(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Create a form
         $form = $this->createForm(GeneratePdfForm::class);
@@ -49,6 +51,16 @@ class GeneratePdfController extends AbstractController
             fwrite($pdf, $content);
             fclose($pdf);
 
+
+            // add the pdf in the pdf entity
+            $pdf = new Pdf();
+            $pdf->setTitle($pdfName);
+            $pdf->setCreatedAt(new \DateTimeImmutable());
+            $pdf->setPath($filePath);
+
+            // save the pdf in the database
+            $entityManager->persist($pdf);
+            $entityManager->flush();
 
         }
 
