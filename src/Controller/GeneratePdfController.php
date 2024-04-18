@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GeneratePdfController extends AbstractController
 {
-    #[Route('/generate/pdf', name: 'generate_pdf')]
+    #[Route('/generate/pdf', name: 'app_generate_pdf')]
     public function generatePdf(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Create a form
