@@ -13,7 +13,6 @@ class GeneratePdfForm extends AbstractType
         $builder
             ->add('pdfName', TextType::class)
             ->add('url', TextType::class)
-            ->add('submit', SubmitType::class)
         ;
     }
 }

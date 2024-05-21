@@ -3,25 +3,20 @@
 {% block title %}Hello GeneratePdfController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="w-full h-[calc(100vh-6rem)] flex items-center justify-center">
+        <div class="w-1/2 bg-slate-100 p-8 shadow-md rounded-lg">
+            <h1 class="text-2xl text-center">Generate PDF</h1>
+            {{ form_start(form) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+            <div class="flex flex-col gap-2 mb-2 *:flex  *:flex-col [&>div>input]:border-slate-500 [&>div>input]:border-[1px] [&>div>input]:rounded [&>div>button]:bg-blue-600">
+                {{ form_row(form.pdfName) }}
+                {{ form_row(form.url) }}
+            </div>
+            <button type="submit" class="bg-blue-600 rounded p-2 text-white w-full">Register</button>
+            {{ form_end(form) }}
 
-    <h1>Generate PDF</h1>
-    {{ form_start(form) }}
-    <div class="my-custom-class-for-errors">
-        {{ form_errors(form) }}
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.pdfName) }}
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.url) }}
-        </div>
-    </div>
-    {{ form_end(form) }}
 {% endblock %}
