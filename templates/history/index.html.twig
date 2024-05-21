@@ -10,7 +10,7 @@
             {% for pdf in pdfs %}
                 <li class="">
                     <a href="{{ path('app_show_pdf', {id: pdf.id}) }}">
-                        <div class="bg-slate-200 p-4 flex flex-col justify-center items-center aspect-square">
+                        <div class="bg-slate-200 p-4 flex flex-col justify-center items-center aspect-square rounded-lg">
                             <h2 class="text-xl font-bold">{{ pdf.title }}</h2>
                             <p class="text-xs text-slate-400">Created at: {{ pdf.createdAt|date('d-m-Y') }}</p>
                         </div>
