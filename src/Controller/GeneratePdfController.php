@@ -72,11 +72,28 @@ class GeneratePdfController extends AbstractController
             $entityManager->persist($pdf);
             $entityManager->flush();
 
+            // Redirect to the PDF display route
+            return $this->redirectToRoute('app_show_pdf', ['id' => $pdf->getId()]);
+
         }
 
         // Afficher le formulaire
         return $this->render('generate_pdf/index.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/generate/pdf/{id}', name: 'app_show_pdf')]
+    public function showPdf(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $pdf = $entityManager->getRepository(Pdf::class)->find($id);
+
+        if (!$pdf) {
+            throw $this->createNotFoundException('The PDF does not exist');
+        }
+
+        return $this->render('generate_pdf/show.html.twig', [
+            'pdf' => $pdf,
         ]);
     }
 }
