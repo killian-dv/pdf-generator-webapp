@@ -10,9 +10,16 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GeneratePdfController extends AbstractController
 {
+    private $params;
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
     #[Route('/generate/pdf', name: 'app_generate_pdf')]
     public function generatePdf(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -28,8 +35,10 @@ class GeneratePdfController extends AbstractController
             // Créer une instance HttpClient
             $client = HttpClient::create();
 
+            $microServiceUrl = $this->params->get('micro_service_url');
+
             // Envoyer la requête POST à l'URL spécifiée avec le paramètre 'url'
-            $response = $client->request('POST', 'http://127.0.0.1:8001/gotenberg/convert', [
+            $response = $client->request('POST', $microServiceUrl, [
                 'headers' => [
                     'Content-Type' => 'multipart/form-data',
                 ],
@@ -55,6 +64,7 @@ class GeneratePdfController extends AbstractController
             // add the pdf in the pdf entity
             $pdf = new Pdf();
             $pdf->setTitle($pdfName);
+            $pdf->setOwner($this->getUser());
             $pdf->setCreatedAt(new \DateTimeImmutable());
             $pdf->setPath($filePath);
 
