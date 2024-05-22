@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,5 +27,29 @@ class SubscriptionController extends AbstractController
         return $this->render('subscription/index.html.twig', [
             'subscriptions' => $subscriptions,
         ]);
+    }
+
+    #[Route('/subscription/{id}/change', name: 'app_change_subscription', methods: ['POST'])]
+    public function changeSubscription(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        $subscription = $entityManager->getRepository(Subscription::class)->find($id);
+
+        if (!$subscription) {
+            throw $this->createNotFoundException('Cet abonnement n\'existe pas.');
+        }
+
+        $user->setSubscription($subscription);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Votre abonnement a été changé avec succès.');
+
+        return $this->redirectToRoute('app_subscription');
     }
 }
